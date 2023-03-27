@@ -1,0 +1,34 @@
+﻿@model Account
+<h3>@TempData["msg"]</h3>
+<form method="post" asp-controller="Account" asp-action="Register">
+    <table border="1">
+        <tr>
+            <td>Username:</td>
+            <td> <input type="text" asp-for="Username" /></td>
+            <td><span asp-validation-for="Username"></span></td>
+        </tr>
+
+        <tr>
+            <td>Password:</td>
+            <td> <input type="password" asp-for="Password" /></td>
+            <td><span asp-validation-for="Password"></span></td>
+        </tr>
+        <tr>
+            <td>Fullname:</td>
+            <td> <input type="text" asp-for="FullName" /></td>
+            <td><span asp-validation-for="FullName"></span></td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td> <input type="text" asp-for="Email" /></td>
+            <td><span asp-validation-for="Email"></span></td>
+        </tr>
+        <tr>
+            <td colspan="3">
+
+                <input type="submit" value="a"/>
+
+            </td>
+        </tr>
+    </table>
+</form>

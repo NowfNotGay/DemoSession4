@@ -1,0 +1,13 @@
+﻿@model Account
+<h3>@TempData["msg"]</h3>
+<form method="post" asp-controller="Account" asp-action="Profile">
+    Username: <input type="text" asp-for="Username" disabled/>
+    <br />
+    Password: <input type="password"  asp-for="Password"/>
+    <br />
+    Fullname: <input type="text" asp-for="FullName" />
+    <br />
+    Email: <input type="text" asp-for="Email" />
+    <br />
+    <input type="submit" />
+</form>

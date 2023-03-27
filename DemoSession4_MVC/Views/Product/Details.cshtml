@@ -1,0 +1,29 @@
+﻿@model Product
+
+<table border="1">
+
+            <tr>
+                <th>Photo:</th>
+                <th> <img src="~/Images/@Model.Photo" width="120" height="100"/> </th>
+            </tr>   
+            <tr>
+                <th>Id:</th>
+                <th>@Model.Id</th>
+            </tr>
+            <tr>
+                <th>Name:</th>
+                <th>@Model.Name</th>
+            </tr>
+            <tr>
+                <th>Price:</th>
+                <th>@Model.Price</th>
+            </tr>
+            <tr>
+                <th>Quantity:</th>
+                <th>@Model.Quantity</th>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                r<th>@Model.Created.ToString("dd/MM/yyyy")</th>
+            </tr>
+</table>

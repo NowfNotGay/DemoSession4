@@ -1,0 +1,53 @@
+﻿@model Product
+<h3>Add</h3>
+
+<form method="post" asp-action="add" asp-controller="product" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td><input type="text" asp-for="Name" /></td>
+        </tr>
+        <tr>
+            <td>Price: </td>
+            <td><input type="text" asp-for="Price" /></td>
+        </tr>
+        <tr>
+            <td>Quantity: </td>
+            <td><input type="number" min="1" asp-for="Quantity" /></td>
+        </tr>
+        <tr>
+            <td>Description: </td>
+            <td><textarea asp-for="Description" cols="20" rows="5"></textarea></td>
+        </tr>
+        <tr>
+            <td>Status: </td>
+            <td>
+            <input type="checkbox" asp-for="Status" /></td>
+        </tr>
+        <tr>
+            <td>Photo:</td>
+            <td><input type="file" asp-for="Photo"/></td>
+        </tr>
+
+        <tr>
+            <td>Created:</td>
+            <td><input type="text" asp-for="Created" asp-format="{0:dd/MM/yyyy}"/></td>
+        </tr>
+        <tr>
+            <td>Category:</td>
+            <td><select name="categoryId">
+           
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        @*dấu chấm thang là sử dụng riêng của html*@
+                    <!option value="@category.Id" @((category.Id == ViewBag.cateid) ? "selected" : "") >@category.Name</!option>
+                    }
+        </select></td>
+        </tr>
+
+        <tr>
+            <td>Save:</td>
+            <td><input type="submit"/></td>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,42 @@
+﻿@model List<Product>
+<h3>Latest Product</h3>
+<table border="1">
+    <tr>
+        <th>Id: </th>
+        <th>Name: </th>
+        <th>Price: </th>
+        <th>Quantity: </th>
+        <th>Description: </th>
+        <th>Status: </th>
+        <th>Photo: </th>
+        <th>Id Cate: </th>
+        <th>Cate Name: </th>
+        <th>Created At: </th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+            <tr>
+                <th>@item.Id </th>
+                <th>
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>
+
+                </th>
+                <th>@item.Price </th>
+                <th>@item.Quantity </th>
+                <th>@item.Description </th>
+                <th>@(item.Status ? "Show" : "Hide")</th>
+
+                <th>
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id"><img src="~/Images/@item.Photo" width="400" height="200"></a>
+                    </th>
+                <th>@item.CategoryId </th>
+                <th>@item.Category.Name</th>
+                <th>@item.Created.ToString("dd/MM/yyyy") </th>
+                <td><a asp-controller="product" asp-action="edit" asp-route-id="@item.Id">Edit</a></td>
+                <td><a asp-controller="product" asp-action="delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure?')">Delete</a></td>
+            </tr>
+    }
+</table>
