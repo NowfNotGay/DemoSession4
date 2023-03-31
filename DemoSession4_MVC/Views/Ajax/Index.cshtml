@@ -1,0 +1,180 @@
+﻿<script src="~/js/jquery-3.6.4.min.js"></script>
+<script>
+    //Sử dụng thư viện document -> ready để đồng bộ (ansyc với web)
+    $(document).ready(function () {
+        $('#buttonDemo1').click(function () {
+            //làm việc với ajax phải có vài thuộc tính
+            $.ajax({
+                type: 'GET', //GET OR POST,
+                url: '/ajax/ajax1',//từ domani tính vào,
+                success: function (result) {
+                    console.log(result);
+                    console.log(result.msg);
+                    $('#result1').html(result.msg);
+                }
+            });
+        });
+
+        $('#buttonDemo2').click(function () {
+            var fullname = $('#fullname').val();
+            $.ajax({
+                type: 'GET', //GET OR POST,
+                url: '/ajax/ajax2',//từ domani tính vào,
+                data: {
+                    //key : value
+                    fullName: fullname
+                },
+                success: function (result) {
+                    $('#result2').html(result.name);
+                }
+            });
+        });
+
+        $('#buttonDemo3').click(function () {
+            $.ajax({
+                type: 'GET', //GET OR POST,
+                url: '/ajax/ajax3',//từ domani tính vào,
+                data: {
+                    //key : value
+                    username: $('#username').val()
+                },
+                success: function (result) {
+                    $('#result3').html(result.msg);
+                }
+            });
+        });
+
+        $('#btnLogin').click(function () {
+            $.ajax({
+                type: 'POST', //GET OR POST,
+                url: '/ajax/ajax4',//từ domani tính vào,
+                data: {
+                    //key : value
+                    username: $('#username2').val(),
+                    password: $('#password').val()
+
+                },
+                success: function (result) {
+                    $('#result4').html(result.msg + "<br/>");
+                }
+            });
+        });
+
+        $('#btnFind').click(function () {
+            $.ajax({
+                type: 'GET', //GET OR POST,
+                url: '/ajax/find',//từ domani tính vào,
+                data: {
+                    //key : value
+                    product_id: $('#product_id').val()
+                },
+                success: function (product) {
+                    if(product != null)
+                        $('#result5').html('id: '+product.id + '<br/>name: '+product.name+ '<br/>price: '+product.price);
+                    else
+                        $('#result5').html('Ma san pham ko ton tai');
+                }
+            });
+        });
+
+
+        $('#btnSelect').click(function () {
+            $.ajax({
+                type: 'GET', //GET OR POST,
+                url: '/ajax/select',//từ domani tính vào,
+                success: function (products) {
+                    var s = '';
+                    for(var i = 0; i < products.length; i++){
+                        s += '<tr>';
+                        s += '<td>' + products[i].id + '</td>';
+                        s += '<td>' + products[i].name + '</td>';
+                        s += '<td>' + products[i].price + '</td>';
+                        s += '</tr>';
+                    }
+                    $('#mytable tbody').html(s);
+                }
+            });
+        });
+        //keyup là hot search
+        $('#username').keyup(function () {
+            $.ajax({
+                type: 'GET', //GET OR POST,
+                url: '/ajax/ajax3',//từ domani tính vào,
+                data: {
+                    //key : value
+                    username: $('#username').val()
+                },
+                success: function (result) {
+                    $('#result3').html(result.msg);
+                }
+            });
+        })
+    });
+</script>
+
+<fieldset>
+    <legend>Demo 1</legend>
+    <input type="button" value="Demo 1" id="buttonDemo1" />
+    <br />
+    <span id="result1"></span>
+</fieldset>
+
+<fieldset>
+    <legend>Demo 2</legend>
+    fullname:
+    <input type="text" id="fullname">
+    <input type="button" value="Demo 2" id="buttonDemo2" />
+    <br />
+    <span id="result2"></span>
+</fieldset>
+
+<fieldset>
+    <legend>Demo 3</legend>
+    Username:
+    <input type="text" id="username">
+    <input type="button" value="Check" id="buttonDemo3" />
+    <br />
+    <span id="result3"></span>
+</fieldset>
+
+<fieldset>
+    <legend>Demo 4</legend>
+    <span id="result4" style="color:red"></span>
+
+    Username:
+    <input type="text" id="username2">
+    Password:
+    <input type="password" id="password">
+
+    <input type="button" value="Login" id="btnLogin" />
+
+    <br />
+</fieldset>
+
+<fieldset>
+    <legend>Demo 5</legend>
+    Id:
+    <input type="text" id="product_id" />
+    <br />
+    <input type="submit" value="Find" id="btnFind" />
+    <br />
+    <span id="result5" style="color:red"></span>
+    <br />
+</fieldset>
+
+<fieldset>
+    <legend>Demo 6</legend>
+    <input type="button" value="Select All" id="btnSelect" />
+    <table id="mytable" border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody id="body">
+
+        </tbody>
+    </table>
+</fieldset>

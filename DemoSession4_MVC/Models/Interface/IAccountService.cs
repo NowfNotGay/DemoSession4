@@ -7,7 +7,6 @@ public interface IAccountService
     public bool AddAccount(Account account);
     public bool CheckAccount(string username);
     public bool UpdateAccount(Account account);
-
     public bool CheckLogin(string username, string password);
 
 }

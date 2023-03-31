@@ -33,6 +33,17 @@ public class ProductController : Controller
         });
     }
 
+    [Route("Index2")]
+    [Route("~/")]
+    public IActionResult Index2()
+    {
+        return View(new ProductIndexViewModels()
+        {
+            Categories = _categoryService.GetCategory(),
+            Products = _productService.GetProducts()
+        });
+    }
+
 
     [Route("details")]
     public IActionResult Details(int id)
@@ -157,5 +168,33 @@ public class ProductController : Controller
         Debug.WriteLine("value:" ,product.CategoryId);
         TempData["msg"] = (_productService.EditProduct(product)) ? "Done" : "Fail";
         return RedirectToAction("Index");
+    }
+
+    [Route("searchbykeywordselect")]
+    public IActionResult SearchbykeywordAjax(string keyword)
+    {
+        if (string.IsNullOrEmpty(keyword) || string.IsNullOrWhiteSpace(keyword))
+        {
+            return new JsonResult(_productService.GetProductsAjax());
+
+        }
+        return new JsonResult(_productService.GetProductByKeyWordSelect(keyword));
+    }
+
+    [Route("searchbycategoryid")]
+    public IActionResult SearchBycategoryid(int id)
+    {
+        if (id<0)
+        {
+            return new JsonResult(_productService.GetProductsAjax());
+
+        }
+        return new JsonResult(_productService.GetProductsByCategoryIdAjax(id));
+    }
+
+    [Route("findbykeywordAutoComplete")]
+    public IActionResult FindBykeywordAutoComplete(string term)
+    {
+        return new JsonResult(_productService.GetProductsByKeyword( term));
     }
 }

@@ -5,7 +5,6 @@ namespace DemoSession4_MVC.Controllers;
 public class Demo2Controller : Controller
 {
     [Route("")]
-    [Route("~/")]
     [Route("Index")]
 
     public IActionResult Index()

@@ -1,0 +1,158 @@
+﻿@model ProductIndexViewModels
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="~/js/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#keyword').keyup(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/product/searchbykeywordselect',
+                data:{
+                    keyword : $(this).val()
+                },
+                success : function(products){
+                    console.log(products)
+                    loadData(products)
+                }
+            });
+        });
+
+        function loadData(products){
+            s='';
+            for(var i = 0;i< products.length;i++){
+                s+='<tr>';
+                s += '<td>' + products[i].id + '</td>';
+
+                s+='<td>'+products[i].name+'</td>';
+                s += '<td>' + products[i].price + '</td>';
+                s += '<td>' + products[i].quatity + '</td>';
+                s += '<td>' + products[i].description + '</td>';
+                s += '<td>' + products[i].status + '</td>';
+
+                s += '<td><img src="/Images/'+products[i].photo+'" width="400" height="200"></td>';
+                s += '<td>' + products[i].categoryName + '</td>';
+                s += '<td>' + products[i].created + '</td>';
+
+                s += '</tr>';
+            }
+            $('#productTable tbody').html(s);
+        }
+
+        $('#comboboxCategory').change(function(){
+            $.ajax({
+                type: 'GET',
+                url: '/product/searchbycategoryid',
+                data:{
+                    id: $('#comboboxCategory option:selected').val()
+                },
+                success : function(products){
+                    loadData(products)
+                }
+            });
+        })
+
+        $('#keywordautocomplete').autocomplete({
+            source: 'product/findbykeywordAutoComplete'
+        })
+    })
+</script>
+<h5>@TempData["msg"]</h5>
+
+<fieldset>
+    <legend>Search by keyword</legend>
+    <form method="get" asp-controller="product" asp-action="searchbykeyword">
+
+        KeyWord: <input type="text" name="keyword" value="@ViewBag.keyword" />
+        <input type="submit" />
+    </form>
+</fieldset>
+
+<fieldset>
+    <legend>
+        Search By Price
+    </legend>
+    <form method="get" asp-controller="product" asp-action="searchbyprice">
+        Min: <input type="number" name="min" min="1" value="@ViewBag.min" />
+        Max: <input type="number" name="max" min="1" value="@ViewBag.max" />
+        <input type="submit" value="Search" />
+    </form>
+</fieldset>
+
+<fieldset>
+    <legend>Search By Category</legend>
+    <form method="get" asp-controller="product" asp-action="searchByCategory">
+        Category <select name="categoryId">
+            <option value="-1">All</option>
+            @foreach (var category in Model.Categories)
+            {
+                @*dấu chấm thang là sử dụng riêng của html*@
+                <!option value="@category.Id" @((category.Id == ViewBag.cateid) ? "selected" : "") >@category.Name</!option>
+            }
+        </select>
+        <br />
+        <input type="submit" value="Search" />
+    </form>
+</fieldset>
+
+Keyword <input type="text" id="keywordautocomplete" />
+<br />
+<br />
+<table border="1" id="productTable">
+    <thead>
+        <tr>
+            <th>Id: </th>
+            <th>
+                Name:
+                <br />
+                <input type="text" id="keyword" style="width: 70px" />
+            </th>
+            <th>Price: </th>
+            <th>Quantity: </th>
+            <th>Description: </th>
+            <th>Status: </th>
+            <th>Photo: </th>
+            <th>Cate Name: 
+
+                </br>
+                <select name="categoryId" id="comboboxCategory">
+
+                    @foreach (var category in Model.Categories)
+                    {
+                        @*dấu chấm thang là sử dụng riêng của html*@
+                        <!option  value="@category.Id" @((category.Id == ViewBag.cateid) ? "selected" : "") >@category.Name</!option>
+                    }
+                    <option value="-1">All</option>
+
+                </select>
+            </th>
+            <th>Created At: </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <th>@item.Id </th>
+                <th>
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>
+
+                </th>
+                <th>@item.Price </th>
+                <th>@item.Quantity </th>
+                <th>@item.Description </th>
+                <th>@(item.Status ? "Show" : "Hide")</th>
+
+                <th>
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id"><img src="~/Images/@item.Photo" width="400" height="200"></a>
+                </th>
+                <th>@item.Category.Name</th>
+                <th>@item.Created.ToString("dd/MM/yyyy") </th>
+                <td><a asp-controller="product" asp-action="edit" asp-route-id="@item.Id">Edit</a></td>
+                <td><a asp-controller="product" asp-action="delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure?')">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+
+</table>
