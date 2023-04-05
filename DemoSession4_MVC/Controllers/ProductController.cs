@@ -3,6 +3,7 @@ using DemoSession4_MVC.Models;
 using DemoSession4_MVC.Models.Interface;
 using DemoSession4_MVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using PagedList.Core;
 using System.Diagnostics;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 using static System.Net.Mime.MediaTypeNames;
@@ -34,7 +35,6 @@ public class ProductController : Controller
     }
 
     [Route("Index2")]
-    [Route("~/")]
     public IActionResult Index2()
     {
         return View(new ProductIndexViewModels()
@@ -43,7 +43,18 @@ public class ProductController : Controller
             Products = _productService.GetProducts()
         });
     }
-
+    [Route("Index3")]
+    [Route("~/")]
+    public IActionResult Index3(int page= 1,int pageSize = 2)
+    {
+        PagedList<Product> pagedList = new PagedList<Product>(_productService.GetProducts().AsQueryable(),page,pageSize);
+        return View(new ProductIndexViewModels()
+        {
+            Categories = _categoryService.GetCategory(),
+            Products = _productService.GetProducts(),
+            Products_page = pagedList
+        });
+    }
 
     [Route("details")]
     public IActionResult Details(int id)
@@ -196,5 +207,24 @@ public class ProductController : Controller
     public IActionResult FindBykeywordAutoComplete(string term)
     {
         return new JsonResult(_productService.GetProductsByKeyword( term));
+    }
+
+    [Route("getProductById")]
+    public IActionResult FindBykeywordAutoComplete(int id)
+    {
+        return new JsonResult(_productService.GetProductsByIdAjax(id));
+    }
+
+
+    [Route("searchbykeywordPagination")]
+    public IActionResult SearchByKeywordPagination(string keyword, int page=1 ,int pageSize = 2)
+    {
+        ViewBag.keyword = keyword;
+        return View("index3", new ProductIndexViewModels()
+        {
+            Categories = _categoryService.GetCategory(),
+            Products = _productService.GetProductByKeyWord(keyword),
+            Products_page = new PagedList<Product>(_productService.GetProductByKeyWord(keyword).AsQueryable(),page,pageSize)
+        });
     }
 }

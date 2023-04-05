@@ -1,0 +1,161 @@
+﻿@model ProductIndexViewModels
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="~/js/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+<h5>@TempData["msg"]</h5>
+
+<fieldset>
+    <legend>Search by keyword</legend>
+    <form method="get" asp-controller="product" asp-action="searchbykeywordPagination">
+
+        KeyWord: <input type="text" name="keyword" value="@ViewBag.keyword" />
+        <input type="submit" />
+    </form>
+</fieldset>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <table border="1" id="productTable" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Id: </th>
+                        <th>
+                            Name:
+                            <br />
+                            <input type="text" id="keyword" style="width: 70px" />
+                        </th>
+                        <th>Price: </th>
+                        <th>Quantity: </th>
+                        <th>Description: </th>
+                        <th>Status: </th>
+                        <th>Photo: </th>
+                        <th>
+                            Cate Name:
+
+                            </br>
+                            <select name="categoryId" id="comboboxCategory">
+
+                                @foreach (var category in Model.Categories)
+                                {
+                                    @*dấu chấm thang là sử dụng riêng của html*@
+                                    <!option  value="@category.Id" @((category.Id == ViewBag.cateid) ? "selected" : "") >@category.Name</!option>
+                                }
+                                <option value="-1">All</option>
+
+                            </select>
+                        </th>
+                        <th>Created At: </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var a = 0;
+                    }
+                    @foreach (var item in Model.Products_page)
+                    {
+                        <tr>
+                            <th>@item.Id </th>
+                            <th>
+
+                                @*<a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>*@
+                                @{
+                                    string s = "buttonClickDetail" + a++;
+                                }
+                                <button type="button" id="@s" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    @item.Name
+                                    <input type="hidden" value="@item.Id" />
+                                </button>
+                            </th>
+                            <th>@item.Price </th>
+                            <th>@item.Quantity </th>
+                            <th>@item.Description </th>
+                            <th>@(item.Status ? "Show" : "Hide")</th>
+
+                            <th>
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id"><img src="~/Images/@item.Photo" width="400" height="200"></a>
+                            </th>
+                            <th>@item.Category.Name</th>
+                            <th>@item.Created.ToString("dd/MM/yyyy") </th>
+                            <td><a asp-controller="product" asp-action="edit" asp-route-id="@item.Id">Edit</a></td>
+                            <td><a asp-controller="product" asp-action="delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure?')">Delete</a></td>
+                        </tr>
+                    }
+                    <input value="@a" type="hidden" id="valueID" />
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9" align="center">
+                            <pager list="@Model.Products_page" asp-route-keyword="@ViewBag.keyword" asp-controller="Product" asp-action="@(ViewBag.keyword== null? "Index3": "searchbykeywordPagination")"></pager>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@*test*@
+<!-- Button trigger modal -->
+<button type="button" id="buttonClickDetail" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+    <input type="hidden" value="3" />
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Details Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="rproduct_name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="product_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_price" class="col-form-label">Price:</label>
+                        <input type="text" class="form-control" id="product_price">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_quantity" class="col-form-label">Quantity:</label>
+                        <input type="text" class="form-control" id="product_quantity">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="product_description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_status" class="col-form-label">Status:</label>
+                        <input type="text" class="form-control" id="product_status">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_photo" class="col-form-label">Photo:</label>
+                        <img src="#" id="product_photo" height="80%" width="80%" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_created" class="col-form-label">Created:</label>
+                        <input type="text" class="form-control" id="product_created">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_category" class="col-form-label">Category:</label>
+                        <input type="text" class="form-control" id="product_category">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

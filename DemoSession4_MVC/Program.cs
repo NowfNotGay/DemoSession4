@@ -1,3 +1,4 @@
+using DemoSession4_MVC.Middelwares;
 using DemoSession4_MVC.Models;
 using DemoSession4_MVC.Models.Interface;
 using DemoSession4_MVC.Models.Service;
@@ -18,9 +19,17 @@ builder.Services.AddDbContext<DatabaseContext>(
         options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration["ConnectionStrings:DemoEFCore"]);
     }
 );
-var app = builder.Build();
 
+var app = builder.Build();
 app.UseSession();
+
+//app.UseMiddleware<Log1Middleware>();
+app.UseLog1Middleware();
+app.UseSecurityMiddleware();
+app.UseLog2Middleware();
+app.UseLog3Middleware();
+app.UseAdminMiddleware();
+
 app.UseStaticFiles();
 
 app.MapControllerRoute(

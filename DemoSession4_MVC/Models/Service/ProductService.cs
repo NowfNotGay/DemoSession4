@@ -116,6 +116,21 @@ public class ProductService : IProductService
 }
     ).ToList();
 
+    public dynamic GetProductsByIdAjax(int id) => _databaseContext.Products.Where(p => p.Id == id).Select(p =>
+        new
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Price = p.Price,
+            Quatity = p.Quantity,
+            Description = p.Description,
+            Status = p.Status,
+            Photo = p.Photo,
+            Created = p.Created,
+            CategoryName = p.Category.Name
+        }
+    ).FirstOrDefault()!;
+
     public List<string> GetProductsByKeyword(string keyword)=> _databaseContext.Products.Where(p => p.Name.Contains(keyword)).Select(p =>p.Name).ToList();
 
     public List<Product> GetProductsDes(int n)=>_databaseContext.Products.OrderByDescending(p => p.Id).Take(n).ToList();

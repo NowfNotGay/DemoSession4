@@ -1,36 +1,39 @@
 ﻿@model ProductIndexViewModels
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="~/js/jquery-3.6.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
+
     $(document).ready(function () {
         $('#keyword').keyup(function () {
             $.ajax({
                 type: 'GET',
                 url: '/product/searchbykeywordselect',
-                data:{
-                    keyword : $(this).val()
+                data: {
+                    keyword: $(this).val()
                 },
-                success : function(products){
+                success: function (products) {
                     console.log(products)
                     loadData(products)
                 }
             });
         });
 
-        function loadData(products){
-            s='';
-            for(var i = 0;i< products.length;i++){
-                s+='<tr>';
+        function loadData(products) {
+            s = '';
+            for (var i = 0; i < products.length; i++) {
+                s += '<tr>';
                 s += '<td>' + products[i].id + '</td>';
 
-                s+='<td>'+products[i].name+'</td>';
+                s += '<td>' + products[i].name + '</td>';
                 s += '<td>' + products[i].price + '</td>';
                 s += '<td>' + products[i].quatity + '</td>';
                 s += '<td>' + products[i].description + '</td>';
                 s += '<td>' + products[i].status + '</td>';
 
-                s += '<td><img src="/Images/'+products[i].photo+'" width="400" height="200"></td>';
+                s += '<td><img src="/Images/' + products[i].photo + '" width="400" height="200"></td>';
                 s += '<td>' + products[i].categoryName + '</td>';
                 s += '<td>' + products[i].created + '</td>';
 
@@ -39,14 +42,14 @@
             $('#productTable tbody').html(s);
         }
 
-        $('#comboboxCategory').change(function(){
+        $('#comboboxCategory').change(function () {
             $.ajax({
                 type: 'GET',
                 url: '/product/searchbycategoryid',
-                data:{
+                data: {
                     id: $('#comboboxCategory option:selected').val()
                 },
-                success : function(products){
+                success: function (products) {
                     loadData(products)
                 }
             });
@@ -54,7 +57,47 @@
 
         $('#keywordautocomplete').autocomplete({
             source: 'product/findbykeywordAutoComplete'
-        })
+        });
+
+
+        var s='';
+        for (var i = 0; i < parseInt($('#valueID').val()); i++) {
+            if (i != parseInt($('#valueID').val()) -1 ){
+                s += '#buttonClickDetail' + i + ',';
+            }else{
+                s += '#buttonClickDetail' + i ;
+            }
+            
+            
+            console.log(s);
+            console.log($(s + ' input').val());
+            var url = s + ' input';
+        }
+        $(s).click(function () {
+            console.log($(url).val());
+            $.ajax({
+                type: 'GET',
+                url: '/product/getProductById',
+                data: {
+                    id: $(url).val()
+                },
+                success: function (product) {
+                    console.log(product);
+                    $('#product_name').val(product.name);
+                    $('#product_price').val(product.price);
+                    $('#product_quantity').val(product.quatity);
+                    $('#product_description').val(product.description);
+                    $('#product_status').val(product.status);
+                    $('#product_name').val(product.name);
+                    $('#product_photo').attr('src', '/Images/' + product.photo);
+                    $('#product_created').val(product.created);
+                    $('#product_category').val(product.categoryName);
+                }
+            });
+        });
+
+
+
     })
 </script>
 <h5>@TempData["msg"]</h5>
@@ -95,7 +138,8 @@
     </form>
 </fieldset>
 
-Keyword <input type="text" id="keywordautocomplete" />
+Keyword
+<input type="text" id="keywordautocomplete" />
 <br />
 <br />
 <table border="1" id="productTable">
@@ -112,7 +156,8 @@ Keyword <input type="text" id="keywordautocomplete" />
             <th>Description: </th>
             <th>Status: </th>
             <th>Photo: </th>
-            <th>Cate Name: 
+            <th>
+                Cate Name:
 
                 </br>
                 <select name="categoryId" id="comboboxCategory">
@@ -131,13 +176,23 @@ Keyword <input type="text" id="keywordautocomplete" />
         </tr>
     </thead>
     <tbody>
+        @{
+            var a = 0;
+        }
         @foreach (var item in Model.Products)
         {
             <tr>
                 <th>@item.Id </th>
                 <th>
-                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>
 
+                    @*<a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>*@
+                    @{
+                        string s = "buttonClickDetail" + a++;
+                    }
+                    <button type="button" id="@s" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        @item.Name
+                        <input type="hidden" value="@item.Id" />
+                    </button>
                 </th>
                 <th>@item.Price </th>
                 <th>@item.Quantity </th>
@@ -153,6 +208,65 @@ Keyword <input type="text" id="keywordautocomplete" />
                 <td><a asp-controller="product" asp-action="delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure?')">Delete</a></td>
             </tr>
         }
+        <input value="@a" type="hidden" id="valueID" />
     </tbody>
 
 </table>
+
+@*test*@
+<!-- Button trigger modal -->
+<button type="button" id="buttonClickDetail" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+    <input type="hidden" value="3" />
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Details Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="rproduct_name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="product_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_price" class="col-form-label">Price:</label>
+                        <input type="text" class="form-control" id="product_price">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_quantity" class="col-form-label">Quantity:</label>
+                        <input type="text" class="form-control" id="product_quantity">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="product_description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_status" class="col-form-label">Status:</label>
+                        <input type="text" class="form-control" id="product_status">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_photo" class="col-form-label">Photo:</label>
+                        <img src="#" id="product_photo" height="80%" width="80%" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_created" class="col-form-label">Created:</label>
+                        <input type="text" class="form-control" id="product_created">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_category" class="col-form-label">Category:</label>
+                        <input type="text" class="form-control" id="product_category">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
