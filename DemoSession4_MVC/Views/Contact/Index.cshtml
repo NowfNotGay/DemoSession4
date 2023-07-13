@@ -1,0 +1,16 @@
+﻿@model Contact
+Contact Page
+@TempData["msg"]
+<form asp-controller="contact" asp-action="sendmail" method="post">
+    Fullname <input type="text" asp-for="FullName" />
+    <br/>
+    Phone <input type="text" asp-for="Phone" />
+    <br />
+    Email <input type="text" asp-for="Email" />
+    <br />
+    Title <input type="text" asp-for="Title" />
+    <br />
+    Content: <textarea asp-for="Content"></textarea>
+    <br />
+    <input type="submit" value="Send"/>
+</form>

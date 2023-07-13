@@ -29,7 +29,7 @@ app.UseSecurityMiddleware();
 app.UseLog2Middleware();
 app.UseLog3Middleware();
 app.UseAdminMiddleware();
-
+app.UseAuthorMiddleware();
 app.UseStaticFiles();
 
 app.MapControllerRoute(

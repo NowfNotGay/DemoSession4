@@ -20,7 +20,7 @@ public class ProductService : IProductService
         {
             return false;
         }
-
+        
         _databaseContext.Products.Add(product);
         return _databaseContext.SaveChanges() > 0;
     }
@@ -53,9 +53,9 @@ public class ProductService : IProductService
 
     public List<Product> GetProductByCategoryId(int id) => _databaseContext.Products.Where(p => p.CategoryId == id).ToList();
 
-    public Product GetProductById(int id) => _databaseContext.Products.Find(id);
+    public Product GetProductById(int id) => _databaseContext.Products.Find(id)!;
 
-    public Product GetProductByIdNoTracking(int id) => _databaseContext.Products.AsNoTracking().SingleOrDefault(p => p.Id == id);
+    public Product GetProductByIdNoTracking(int id) => _databaseContext.Products.AsNoTracking().SingleOrDefault(p => p.Id == id)!;
 
     public dynamic GetProductByIdSelect(int id) => _databaseContext.Products.Where(p => p.Id == id).Select(p=> new
     {

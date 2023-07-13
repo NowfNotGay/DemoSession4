@@ -2,6 +2,6 @@
 
 public interface ICategoryService
 {
-    public List<Category> GetCategory();
-
+    public dynamic GetCategory();
+    public dynamic GetCategoryByLevel();
 }

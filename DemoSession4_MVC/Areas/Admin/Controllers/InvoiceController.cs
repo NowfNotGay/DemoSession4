@@ -2,8 +2,8 @@
 
 namespace DemoSession4_MVC.Areas.Admin.Controllers;
 [Area("admin")]
-[Route("admin/dashboard")]
-public class DashboardController : Controller
+[Route("admin/invoice")]
+public class InvoiceController : Controller
 {
     [Route("")]
     [Route("Index")]

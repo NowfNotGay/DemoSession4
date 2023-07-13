@@ -16,6 +16,17 @@ public class Log3Middleware
 
     public Task Invoke(HttpContext httpContext)
     {
+        if (httpContext.Items["id"] != null)
+        {
+            var id = int.Parse(httpContext.Items["id"].ToString()); 
+            Debug.WriteLine("id - log3: " + id);
+        }
+
+        if (httpContext.Items["username"] != null)
+        {
+            var username = httpContext.Items["username"].ToString();
+            Debug.WriteLine("username - log3: " + username);
+        }
         var url = httpContext.Request.Path.ToString();
         Debug.WriteLine("Url"+ url);
         return _next(httpContext);

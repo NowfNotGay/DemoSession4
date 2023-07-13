@@ -1,0 +1,54 @@
+﻿<h3> Cart </h3>
+<form asp-controller="cart" asp-action="update" method="post">
+    <table border="1">
+        <tr>
+            <th>Photo:</th>
+            <th>Id:</th>
+            <th>Name:</th>
+            <th>Price:</th>
+            <th>Quantity: <input type="submit" value="Update" /></th>
+            <th>Total:</th>
+            <td>Remove</td>
+        </tr>
+        @foreach (var item in ViewBag.carts)
+        {
+            <tr>
+
+                <td> <img src="~/images/@item.ProductCart.Photo" width="120" height="100" /></td>
+                <td>@item.ProductCart.Id</td>
+                <td>
+                    <a asp-controller="product" asp-action="details" asp-route-id="@item.ProductCart.Id"> @item.ProductCart.Name</a>
+                </td>
+                <td>@item.ProductCart.Price</td>
+                <td>
+                    <input type="number" min="1" value="@item.Quantity" name="quantities" />
+                </td>
+                <td>@(item.ProductCart.Price * item.Quantity)</td>
+                <td><a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductCart.Id" onclick="return confirm('Are you sure? ')">Remove</a></td>
+            </tr>
+        }
+        <tr>
+            <td colspan="7">Total: </td>
+            <td>@ViewBag.total</td>
+        </tr>
+    </table>
+    <a asp-controller="product" asp-action="Index">Back</a>
+</form>
+<form method="post" action="@ViewBag.postUrl">
+    <input type="hidden" name="upload" value="1" />
+    <input type="hidden" name="return" value="@ViewBag.returnUrl" />
+    <input type="hidden" name="cmd" value="_cart" />
+    <input type="hidden" name="business" value="@ViewBag.business" />
+    @{
+        int i = 1;
+    }
+    @foreach(var item in ViewBag.carts)
+    {
+        <input type="hidden" name="item_number_@i" value="@item.ProductCart.Id"/>
+        <input type="hidden" name="item_name_@i" value="@item.ProductCart.Name" />
+        <input type="hidden" name="amount_@i" value="@item.ProductCart.Price" />
+        <input type="hidden" name="quantity_@i" value="@item.Quantity" />
+        i++;
+    }
+    <button><img src="~/Images/paypal.png"/></button>
+</form>

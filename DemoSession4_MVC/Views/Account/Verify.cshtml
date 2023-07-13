@@ -1,0 +1,8 @@
+﻿<h3>Security Code</h3>
+@TempData["msg"]
+<form asp-action="verify" asp-controller="account" method="post">
+    <input type="text" name="securityCode" /> 
+    <br />
+    <input type="submit" value="send" />
+    <input type="hidden" name="email" value="@ViewBag.email"/>
+</form>

@@ -16,7 +16,7 @@ public partial class Account
     public string Email { get; set; }
 
     public bool Status { get; set; }
-
+    public string? SecurityCode { get; set; }
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
     public virtual ICollection<Role> Roles { get; } = new List<Role>();

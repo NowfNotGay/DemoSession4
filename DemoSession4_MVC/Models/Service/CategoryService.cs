@@ -10,5 +10,23 @@ public class CategoryService : ICategoryService
     {
         _databaseContext = databaseContext;
     }
-    public List<Category> GetCategory()=>_databaseContext.Categories.ToList();
+    public dynamic GetCategory()=>_databaseContext.Categories;
+
+    public dynamic GetCategoryByLevel()
+    {
+        throw new NotImplementedException();
+    }
+
+    private List<Category> dequy(List<Category> categories,int parent = 0,string level = "")
+    {
+        foreach (var category in categories)
+        {
+            category.Name = level + category.Name;
+            if (category.parent = parent)
+            {
+                dequy(categories,parent = category.id,level = "--|")
+            }
+        }
+        return categories;
+    }
 }

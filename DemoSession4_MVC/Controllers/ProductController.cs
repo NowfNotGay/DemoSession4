@@ -2,6 +2,7 @@
 using DemoSession4_MVC.Models;
 using DemoSession4_MVC.Models.Interface;
 using DemoSession4_MVC.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PagedList.Core;
 using System.Diagnostics;
@@ -22,9 +23,11 @@ public class ProductController : Controller
         _categoryService = categoryService;
         _webHostEnvironment = webHostEnvironment;
     }
+    [Route("~/")]
 
     [Route("Index")]
     [Route("")]
+
     public IActionResult Index()
     {
         return View(new ProductIndexViewModels()
@@ -44,9 +47,19 @@ public class ProductController : Controller
         });
     }
     [Route("Index3")]
-    [Route("~/")]
-    public IActionResult Index3(int page= 1,int pageSize = 2)
+    public IActionResult Index3(int page = 1, int pageSize = 2)
     {
+        if (HttpContext.Items["id"] != null)
+        {
+            var id = int.Parse(HttpContext.Items["id"].ToString());
+            Debug.WriteLine("id - controller: " + id);
+        }
+
+        if (HttpContext.Items["username"] != null)
+        {
+            var username = HttpContext.Items["username"].ToString();
+            Debug.WriteLine("username - controller: " + username);
+        }
         PagedList<Product> pagedList = new PagedList<Product>(_productService.GetProducts().AsQueryable(),page,pageSize);
         return View(new ProductIndexViewModels()
         {

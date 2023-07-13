@@ -8,5 +8,5 @@ public interface IAccountService
     public bool CheckAccount(string username);
     public bool UpdateAccount(Account account);
     public bool CheckLogin(string username, string password);
-
+    public Account GetAccountByEmailNoTracking(string email);
 }

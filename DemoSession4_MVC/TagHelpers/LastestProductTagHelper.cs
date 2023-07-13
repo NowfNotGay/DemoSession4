@@ -12,12 +12,9 @@ namespace DemoSession4_MVC.TagHelpers;
 public class LastestProductTagHelper : TagHelper
 {
     private readonly IProductService _productService;
-
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext viewContext { get; set; }
-
-
     private readonly IHtmlHelper _htmlHelper;
     public LastestProductTagHelper(IProductService productService, IHtmlHelper htmlHelper)
     {

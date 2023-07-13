@@ -47,16 +47,16 @@ public class AccountService : IAccountService
             return false;
         }
     }
+
+    public Account GetAccountByEmailNoTracking(string email) => _databaseContext.Accounts.AsNoTracking().FirstOrDefault(p => p.Email == email);
+
     //Lazy 
     public Account GetAccountById(string username)
     {
         throw new NotImplementedException();
     }
 
-    public Account GetAccountByUsername(string username)
-    {
-        throw new NotImplementedException();
-    }
+    public Account GetAccountByUsername(string username) => _databaseContext.Accounts.FirstOrDefault(a => a.Username == username)!;
     //!Lazy
     public Account GetAccountByUsernameNoTracking(string username) => _databaseContext.Accounts.AsNoTracking().SingleOrDefault(a=>a.Username == username);
 
